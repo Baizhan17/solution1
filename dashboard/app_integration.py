@@ -16,7 +16,8 @@ app = FastAPI(
 
 templates = Jinja2Templates(directory="dashboard/templates")
 
-DATA_PROVIDER_URL = "http://localhost:8000"
+#DATA_PROVIDER_URL = "http://localhost:8000"
+DATA_PROVIDER_URL = "https://solution1-1.onrender.com"
 TIMEOUT = 10.0
 
 async def fetch_from_provider(client: httpx.AsyncClient, endpoint: str) -> List[Dict[str, Any]]:

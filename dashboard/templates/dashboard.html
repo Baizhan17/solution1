@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consumer Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .architecture {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        canvas {
+            max-height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 Consumer Dashboard</h1>
+        <p><strong>Provider URL:</strong> {{ provider_url }}</p>
+    </div>
+    
+    <!-- <div class="architecture">
+        <h2>Архитектура системы:</h2>
+        <p><strong>Блок А (Data Provider):</strong> FastAPI на порту 8000 → работает с БД</p>
+        <p><strong>Блок Б (Consumer):</strong> FastAPI на порту 8001 → использует httpx для получения данных из Блока А</p>
+        <p><strong>Ключевая особенность:</strong> Consumer НЕ обращается к БД напрямую, только через API вызовы</p>
+    </div> -->
+    
+    <div class="stats">
+        <div class="stat-card">
+            <h3>⛅ Weather</h3>
+            <p class="count">{{ weather|length }} days</p>
+        </div>
+        <div class="stat-card">
+            <h3>💰 Sales</h3>
+            <p class="count">{{ sales|length }} months</p>
+        </div>
+        <div class="stat-card">
+            <h3>📊 Traffic</h3>
+            <p class="count">{{ traffic|length }} sources</p>
+        </div>
+        <div class="stat-card">
+            <h3>📦 Inventory</h3>
+            <p class="count">{{ inventory|length }} goods</p>
+        </div>
+        <div class="stat-card">
+            <h3>⚡ Time period</h3>
+            <p class="count">{{ execution_time }} seconds</p>
+        </div>
+    </div>
+    
+    <!-- Weather Chart -->
+    <div class="chart-container">
+        <h2>Temperature by day of the week</h2>
+        <canvas id="weatherChart"></canvas>
+    </div>
+    
+    <!-- Sales Chart -->
+    <div class="chart-container">
+        <h2>Sales by month (PLN)</h2>
+        <canvas id="salesChart"></canvas>
+    </div>
+    
+    <!-- Traffic Chart -->
+    <div class="chart-container">
+        <h2>Traffic sources (%)</h2>
+        <canvas id="trafficChart"></canvas>
+    </div>
+    
+    <!-- Inventory Chart -->
+    <div class="chart-container">
+        <h2>Inventory levels</h2>
+        <canvas id="inventoryChart"></canvas>
+    </div>
+    
+    <script>
+        // Данные из шаблона
+        const weatherData = {{ weather|tojson }};
+        const salesData = {{ sales|tojson }};
+        const trafficData = {{ traffic|tojson }};
+        const inventoryData = {{ inventory|tojson }};
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Weather Chart
+            if (weatherData.length > 0) {
+                new Chart(document.getElementById('weatherChart'), {
+                    type: 'line',
+                    data: {
+                        labels: weatherData.map(w => w.day_of_week),
+                        datasets: [{
+                            label: 'Temperature (°C)',
+                            data: weatherData.map(w => w.temperature_celsius),
+                            borderColor: '#36a2eb',
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            tension: 0.4
+                        }]
+                    }
+                });
+            }
+            
+            // Sales Chart
+            if (salesData.length > 0) {
+                new Chart(document.getElementById('salesChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: salesData.map(s => s.month),
+                        datasets: [{
+                            label: 'Sales (PLN)',
+                            data: salesData.map(s => s.sales_amount_pln),
+                            backgroundColor: '#4bc0c0'
+                        }]
+                    }
+                });
+            }
+            
+            // Traffic Chart
+            if (trafficData.length > 0) {
+                new Chart(document.getElementById('trafficChart'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: trafficData.map(t => t.source_name),
+                        datasets: [{
+                            data: trafficData.map(t => t.percentage),
+                            backgroundColor: ['#ff6384', '#36a2eb', '#ffce56', '#4bc0c0', '#9966ff']
+                        }]
+                    }
+                });
+            }
+            
+            // Inventory Chart
+            if (inventoryData.length > 0) {
+                new Chart(document.getElementById('inventoryChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: inventoryData.map(i => i.product_type),
+                        datasets: [{
+                            label: 'Quantity',
+                            data: inventoryData.map(i => i.quantity),
+                            backgroundColor: '#9966ff'
+                        }]
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

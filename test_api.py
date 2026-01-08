@@ -8,7 +8,7 @@ def test_endpoints():
     
     print("Testing API endpoints...\n")
     
-    # Test Case 1: Weather endpoint
+
     print("Test Case 1: /api/weather")
     print("Expected URL: GET http://localhost:8000/api/weather")
     response = requests.get(f"{BASE_URL}/api/weather")
@@ -21,7 +21,7 @@ def test_endpoints():
         print("✗ Test failed")
     print()
     
-    # Test Case 2: Sales endpoint
+  
     print("Test Case 2: /api/sales")
     print("Expected URL: GET http://localhost:8000/api/sales")
     response = requests.get(f"{BASE_URL}/api/sales")
@@ -34,7 +34,7 @@ def test_endpoints():
         print("✗ Test failed")
     print()
     
-    # Test Case 3: Traffic endpoint
+
     print("Test Case 3: /api/traffic")
     print("Expected URL: GET http://localhost:8000/api/traffic")
     response = requests.get(f"{BASE_URL}/api/traffic")
@@ -47,7 +47,7 @@ def test_endpoints():
         print("✗ Test failed")
     print()
     
-    # Test Case 4: Inventory endpoint
+
     print("Test Case 4: /api/inventory")
     print("Expected URL: GET http://localhost:8000/api/inventory")
     response = requests.get(f"{BASE_URL}/api/inventory")
@@ -60,7 +60,7 @@ def test_endpoints():
         print("✗ Test failed")
 
 if __name__ == "__main__":
-    # Запуск тестов после запуска сервера
+  
     print("Make sure the server is running on http://localhost:8000")
     print("Run: uvicorn main:app --reload")
     input("Press Enter to run tests...")
